@@ -107,19 +107,42 @@
 					console.log(response.status);
 					if (response.status === 'connected') {
 						var accessToken = response.authResponse.accessToken;
-						console.log(accessToken);
+						var userID = response.authResponse.userID;
+						console.log(accessToken, userID + " L111: index.jsp");
 						FB.logout(function(response) {
 							console.log(response);
 							if(response.status === 'unknown') {
-								console.log(1);
-								$('.logoutMsg').html("");
-								$('#fbResult').html("");
-								$('.logoutErrorMsg').css("display","none");
-								$('.logoutMsg').css("display","block");
-								$('.logoutMsg').html("You have been logged out of the app. Login again to continue. Reloading...");
-								setInterval(function() {
-									location.reload();
-								}, 3000);
+								
+								$.ajax({
+									method: 'post',
+									url: '/logout',
+									dataType: 'json',
+									data: {
+										fb_id: userID
+									},
+									success: function(resp) {
+										console.log("123: " + resp)
+										if(resp.success != ""){
+											console.log("There was error clearing session on servlet");	
+										}
+										console.log("Logout successfull!");
+										$('.logoutMsg').html("");
+										$('#fbResult').html("");
+										$('.logoutErrorMsg').css("display","none");
+										$('.logoutMsg').css("display","block");
+										$('.logoutMsg').html("You have been logged out of the app. Login again to continue. Reloading...");
+										setInterval(function() {
+											location.reload();
+										}, 1000);
+									},
+									error: function(err) {
+										console.log("Oops something went wrong! Error: " + err);
+										$('.logoutErrorMsg').html("");
+										$('.logoutErrorMsg').css("display","block");
+										$('.logoutMsg').css("display","none");
+										$('.logoutErrorMsg').html("You are not logged into the app!");
+									}
+								});
 							}
 						});
 					} else {
@@ -153,15 +176,17 @@
 					  	// SCRIPT FOR REST FOR THE PROJECT. THIS SENDS DATA TO THE SERVLET.
 					  	$.ajax({
 							type: 'POST',
-							url: '/dashboard',
+							url: '/home',
 							dataType: 'json',
 							data: { 
-								action: 'respond',
+								action: 'login',
 								access_token: response.authResponse.accessToken,
-								response: JSON.stringify(data)
+								userID:response.authResponse.userID,
+								name: data.name,
+								email: data.email
 							},
 							success: function(data){
-								console.log("1"); 
+								console.log("166"); 
 								console.log(data);
 							 },
 							 error: function(err) {
@@ -181,7 +206,7 @@
 					    if (response.authResponse) {
 					     console.log('Welcome!  Fetching your information.... ');
 					     const pems = 'name, first_name, last_name, email, cover, birthday, age_range, gender, picture';
-					     FB.api('/me', {fields:pems}, function(response) {
+					     FB.api('/me', {fields:pems}, function(data) {
 					    	$('.logoutErrorMsg').html("");
 					    	$('.logoutErrorMsg').css("display",'none');
 					    	$('.logoutMsg').css('display', 'block');
@@ -195,6 +220,27 @@
 						  	var age = (birthYear != 0) ? new Date().getFullYear() - birthYear + " years" : 'Birth date not found';
 						  	console.log(age);
 						  	$('#fbResult').append("<div>Age: " + age + "</div>");
+						  	
+						 // SCRIPT FOR REST FOR THE PROJECT. THIS SENDS DATA TO THE SERVLET.
+						  	$.ajax({
+								type: 'POST',
+								url: '/home',
+								dataType: 'json',
+								data: { 
+									action: 'login',
+									access_token: response.authResponse.accessToken,
+									userID:response.authResponse.userID,
+									name: data.name,
+									email: data.email
+								},
+								success: function(data){
+									console.log("214"); 
+									console.log(data);
+								 },
+								 error: function(err) {
+									console.log(err);
+								}
+							 });
 					     });
 					    } else {
 					     console.log('User cancelled login or did not fully authorize.');
@@ -206,7 +252,7 @@
 					    if (response.authResponse) {
 					     console.log('Welcome!  Fetching your information.... ');
 					     const pems = 'name, first_name, last_name, email, cover, birthday, age_range, gender, picture';
-					     FB.api('/me', {fields:pems}, function(response) {
+					     FB.api('/me', {fields:pems}, function(data) {
 					    	 $('.logoutErrorMsg').html("");
 					    	 $('.logoutErrorMsg').css("display",'none');
 					    	 $('.logoutMsg').css('display', 'block');
@@ -219,6 +265,26 @@
 						  	 var age = (birthYear != 0) ? new Date().getFullYear() - birthYear + " years" : 'Birth date not found';
 						  	 console.log(age);
 						  	 $('#fbResult').append("<div>Age: " + age + "</div>");
+						  	 
+						  	$.ajax({
+								type: 'POST',
+								url: '/home',
+								dataType: 'json',
+								data: { 
+									action: 'login',
+									access_token: response.authResponse.accessToken,
+									userID:response.authResponse.userID,
+									name: data.name,
+									email: data.email
+								},
+								success: function(data){
+									console.log("258"); 
+									console.log(data);
+								 },
+								 error: function(err) {
+									console.log(err);
+								}
+							 });
 					     });
 					    } else {
 					     console.log('User cancelled login or did not fully authorize.');

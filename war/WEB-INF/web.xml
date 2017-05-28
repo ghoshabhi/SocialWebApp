@@ -6,30 +6,39 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   
   <servlet>
-  	<servlet-name>IndexPage</servlet-name>
+  	<servlet-name>IndexPageHandler</servlet-name>
   	<servlet-class>com.socialwebapp.HomePageController</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>IndexPage</servlet-name>
+  	<servlet-name>IndexPageHandler</servlet-name>
   	<url-pattern>/home</url-pattern>
   </servlet-mapping>
   
   <servlet>
-  	<servlet-name>NewTweetPage</servlet-name>
+  	<servlet-name>NewTweetPageHandler</servlet-name>
   	<servlet-class>com.socialwebapp.NewTweetController</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>NewTweetPage</servlet-name>
+  	<servlet-name>NewTweetPageHandler</servlet-name>
   	<url-pattern>/new_tweet</url-pattern>
   </servlet-mapping>
   
   <servlet>
-  	<servlet-name>TweetPermalinkPage</servlet-name>
+  	<servlet-name>TweetPermalinkPageHandler</servlet-name>
   	<servlet-class>com.socialwebapp.TweetPermalinkController</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>TweetPermalinkPage</servlet-name>
-  	<url-pattern>/tweet/*</url-pattern>
+  	<servlet-name>TweetPermalinkPageHandler</servlet-name>
+  	<url-pattern>/tweet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>LogoutPageHandler</servlet-name>
+  	<servlet-class>com.socialwebapp.LogoutController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>LogoutPageHandler</servlet-name>
+  	<url-pattern>/logout</url-pattern>
   </servlet-mapping>
   
 </web-app>
