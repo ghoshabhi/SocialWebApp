@@ -34,9 +34,9 @@ public class NewTweetController extends HttpServlet {
 		
 		if(req.getSession().getAttribute("fb_id") != null) {
 			fb_id = Long.valueOf((String) req.getSession().getAttribute("fb_id"));
-			System.out.println("38: Controller: " + fb_id);
+			//System.out.println("38: Controller: " + fb_id);
 		}
-		System.out.println("40: Controller: " + fb_id);
+		//System.out.println("40: Controller: " + fb_id);
 //		Cookie[] cookies = req.getCookies();
 //
 //		for (int i = 0; i < cookies.length; i++) {
@@ -48,7 +48,7 @@ public class NewTweetController extends HttpServlet {
 //		}
 		
 		if(fb_id != 0) {
-			System.out.println("Line 52: " + fb_id);
+			//System.out.println("Line 52: " + fb_id);
 			//Query queryUser = new Query("User").setFilter(FilterOperator.EQUAL.of("fb_id", fb_id));
 			//int userCount = ds.prepare(queryUser).countEntities();
 			//Query queryAllTweets = new Query("Tweet")
@@ -57,7 +57,7 @@ public class NewTweetController extends HttpServlet {
 			
 			req.setAttribute("user", fb_id);
 			req.setAttribute("tweets", tweets);
-			System.out.println("Line 60: " + fb_id);
+			//System.out.println("Line 60: " + fb_id);
 //			System.out.print("Tweets Size: " + tweets.size());
 //			
 //			for(Entity tweet : tweets) {

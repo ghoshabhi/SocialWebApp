@@ -41,4 +41,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   	<url-pattern>/logout</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>TopTweetsPageHandler</servlet-name>
+  	<servlet-class>com.socialwebapp.TopTweetsController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>TopTweetsPageHandler</servlet-name>
+  	<url-pattern>/top_tweets</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>FriendsTweetsPageHandler</servlet-name>
+  	<servlet-class>com.socialwebapp.FriendsTweetsPageController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>FriendsTweetsPageHandler</servlet-name>
+  	<url-pattern>/friends</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
