@@ -4,7 +4,7 @@ Live App: https://fb-login-166722.appspot.com (Maxed out on project IDs)
 Facebook App: https://apps.facebook.com/1828138897506637
 
 ## Description 
-This project is a Twitter like interface where you can write a tweeet and interact with it my sharing it to your Facebook timeline or sending it to a friend. This app uses Facebook's JavaScript SDK for authentication. The app follows a strict MVC framework guideline
+This project is a Twitter like interface where you can write a tweet and interact with it my sharing it to your Facebook timeline or sending it to a friend. This app uses Facebook's JavaScript SDK for authentication. The app follows a strict MVC framework guideline
 
 ## Technologies Used
 Front-End: JSP, JSTL, HTML, CSS
