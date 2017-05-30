@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>Top Tweets</title>
+	<title>Delete Tweet</title>
 	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 	<script src="https://use.fontawesome.com/c3761a5d7c.js"></script>
@@ -36,39 +36,15 @@
 	<jsp:include page="partials/header.jsp"></jsp:include>
 	
 	<div class="container">
-		<h2>Top Tweets Page</h2>
-		<div style="display:flex; flex-flow:row wrap; jusitfy-content:space-between">
-			<c:forEach items="${top_tweets}" var="tweet">			
-			    <div class="card" style="margin-bottom:5px; width:20rem">
-				  <div class="card-block">
-				  	<div class="row">
-				  		<div class="col-sm-9">
-				  			<p class="card-text">${tweet.properties.message}</p>
-				  		</div>
-				  		<div class="col-sm-3">
-				  			<div class="viewCounter">${tweet.properties.view_counter}</div>
-				  		</div>
-				  	</div>
-				  	<br>
-				  	<div class="card-footer text-muted">
-				    	<a
-					    	onclick="fbShare(this)"
-					    	style="text-decoration: none;
-					    	id="share"
-					    	href="#" data-url="/tweet?id=${tweet.properties.tweet_id}"
-					    >
-					    	<i class="fa fa-facebook" aria-hidden="true"></i>
-					    </a> |
-					    <a style="text-decoration:none" href="/tweet?id=${tweet.properties.tweet_id}">
-					    	View <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> 
-					    </a>
-				  	</div>
-				  	<%-- <hr>
-				     --%>
-				  </div>
-				</div>
-			</c:forEach>
-		</div>
+		<c:if test="${not empty tweet_to_delete && owner}">
+			<h2>Delete Tweet ? </h2>
+			<p>Are you sure you want to delete the tweet: "<a href="/tweet?id=${tweet_to_delete.properties.tweet_id}">${tweet_to_delete.properties.message}</a>" ?</p>
+			<form method="post">
+				<a href="/new_tweet" class="btn btn-warning">Go Back</a>
+				<input type="submit" value="Confirm" class="btn btn-danger"/>
+			</form>
+		</c:if>
+		
 	</div>
 	
 	<!-- Dependencies -->

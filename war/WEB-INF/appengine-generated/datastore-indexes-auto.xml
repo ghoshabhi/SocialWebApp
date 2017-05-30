@@ -1,4 +1,11 @@
-<!-- Indices written at Sun, 28 May 2017 22:05:22 PDT -->
+<!-- Indices written at Mon, 29 May 2017 22:55:18 PDT -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 7 times in query history -->
+    <datastore-index kind="Tweet" ancestor="false" source="auto">
+        <property name="user_id" direction="asc"/>
+        <property name="view_counter" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>

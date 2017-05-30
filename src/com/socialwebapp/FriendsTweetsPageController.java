@@ -21,78 +21,53 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class FriendsTweetsPageController extends HttpServlet {
+	@SuppressWarnings("deprecation")
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		List<Entity> tweets = null;
+		Query queryAllTweets = null;
 		
 		if(req.getSession().getAttribute("fb_id") != null) {
-			System.out.println("if");
-			@SuppressWarnings("deprecation")
-			Query queryAllTweets = new Query("Tweet").addFilter("user_id", FilterOperator.NOT_EQUAL, Long.valueOf((String)req.getSession().getAttribute("fb_id")));
-			tweets = ds.prepare(queryAllTweets).asList(FetchOptions.Builder.withLimit(10));
+			queryAllTweets = new Query("Tweet").addFilter("user_id", FilterOperator.NOT_EQUAL, Long.valueOf((String)req.getSession().getAttribute("fb_id")));
 			req.setAttribute("user", (String) req.getSession().getAttribute("fb_id"));
-			
-			Query queryAllUsers = new Query("User");
-			List<Entity> users = ds.prepare(queryAllUsers).asList(FetchOptions.Builder.withDefaults());
-			
-			JSONObject mainList = new JSONObject();
-			
-			for(Entity user : users) {
-				JSONArray dataArray = new JSONArray();
-				for(Entity tweet : tweets) {
-					if((Long)tweet.getProperty("user_id") == Long.parseLong((String)user.getProperty("fb_id"))) {
-						JSONObject tweetObj = new JSONObject();
-						try {
-							tweetObj.put("user_name", (String)user.getProperty("name"));
-							tweetObj.put("tweet_id", (Long)tweet.getKey().getId());
-							tweetObj.put("tweet_message", (String)tweet.getProperty("message"));
-							dataArray.put(tweetObj);
-							//System.out.println("53: " + dataArray.toString());
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-				try {
-					mainList.put((String)user.getProperty("name"), dataArray);
-					System.out.println("57: " + mainList.toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-			req.setAttribute("friends_tweets", mainList);
-			
-			@SuppressWarnings("unchecked")
-			Iterator<String> keys = mainList.keys();
-			while(keys.hasNext()){
-				String key = keys.next();
-				System.out.println("Tweets By: " + key);
-				try {
-					JSONArray arr = mainList.getJSONArray(key);
-					//System.out.println("72: " + arr.toString());
-					for(int i=0; i < arr.length(); i++) {
-						JSONObject obj = arr.getJSONObject(i);
-						System.out.println();
-						System.out.println(obj.get("user_name"));
-						System.out.println(obj.get("tweet_message"));
-						System.out.println("-----------------------------------------");
-						System.out.println();
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			//System.out.println("66: " + mainList.toString());
-			
 		} else {
-			System.out.println("else");
-			Query queryAllTweets = new Query("Tweet");
-			tweets = ds.prepare(queryAllTweets).asList(FetchOptions.Builder.withLimit(10));
+			queryAllTweets = new Query("Tweet");
 			req.setAttribute("user", null);
-			req.setAttribute("tweets", tweets);
 		}
+
+		tweets = ds.prepare(queryAllTweets).asList(FetchOptions.Builder.withLimit(10));
 		
+		Query queryAllUsers = new Query("User");
+		List<Entity> users = ds.prepare(queryAllUsers).asList(FetchOptions.Builder.withDefaults());
+		
+		JSONObject mainList = new JSONObject();
+		
+		for(Entity user : users) {
+			JSONArray dataArray = new JSONArray();
+			for(Entity tweet : tweets) {
+				if((Long)tweet.getProperty("user_id") == Long.parseLong((String)user.getProperty("fb_id"))) {
+					JSONObject tweetObj = new JSONObject();
+					try {
+						tweetObj.put("user_name", (String)user.getProperty("name"));
+						tweetObj.put("views_counter", (Long)tweet.getProperty("view_counter"));
+						tweetObj.put("tweet_id", (Long)tweet.getKey().getId());
+						tweetObj.put("tweet_message", (String)tweet.getProperty("message"));
+						tweetObj.put("created_at", (String)tweet.getProperty("created_at"));
+						dataArray.put(tweetObj);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					continue;
+				}
+			}
+			try {
+				mainList.put((String)user.getProperty("name"), dataArray);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		req.setAttribute("friends_tweets", mainList);		
 		resp.setContentType("text/html");
 		req.getRequestDispatcher("friends.jsp").forward(req, resp);
 	}

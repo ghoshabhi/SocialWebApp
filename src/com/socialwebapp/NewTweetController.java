@@ -2,6 +2,8 @@ package com.socialwebapp;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -15,12 +17,15 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.*;
 
 @SuppressWarnings("serial")
@@ -34,44 +39,16 @@ public class NewTweetController extends HttpServlet {
 		
 		if(req.getSession().getAttribute("fb_id") != null) {
 			fb_id = Long.valueOf((String) req.getSession().getAttribute("fb_id"));
-			//System.out.println("38: Controller: " + fb_id);
 		}
-		//System.out.println("40: Controller: " + fb_id);
-//		Cookie[] cookies = req.getCookies();
-//
-//		for (int i = 0; i < cookies.length; i++) {
-//			//System.out.println("69: " + cookies[i].getValue());
-//			if(cookies[i].getName().equals("fb_id")) {
-//				System.out.println("38: " + cookies[i].getValue());
-//				fb_id = cookies[i].getValue();
-//			}
-//		}
 		
 		if(fb_id != 0) {
-			//System.out.println("Line 52: " + fb_id);
-			//Query queryUser = new Query("User").setFilter(FilterOperator.EQUAL.of("fb_id", fb_id));
-			//int userCount = ds.prepare(queryUser).countEntities();
-			//Query queryAllTweets = new Query("Tweet")
-			Query queryAllTweets = new Query("Tweet").setFilter(FilterOperator.EQUAL.of("user_id", fb_id));
+			Query queryAllTweets = new Query("Tweet").setFilter(FilterOperator.EQUAL.of("user_id", fb_id)).addSort("view_counter", SortDirection.DESCENDING);
 			List<Entity> tweets = ds.prepare(queryAllTweets).asList(FetchOptions.Builder.withLimit(10));
+			
+			System.out.println("NTC: " + tweets);
 			
 			req.setAttribute("user", fb_id);
 			req.setAttribute("tweets", tweets);
-			//System.out.println("Line 60: " + fb_id);
-//			System.out.print("Tweets Size: " + tweets.size());
-//			
-//			for(Entity tweet : tweets) {
-//				System.out.print(tweet.getProperty("message"));
-//				System.out.print(tweet.getKey().getId());
-//			}
-
-//			if(userCount > 0) {				
-//				req.setAttribute("tweets", tweets);
-//				req.setAttribute("user", fb_id);
-//			} else {
-//				System.out.println("72: " + userCount);
-//				req.setAttribute("user", null);
-//			}
 		} else {
 			req.setAttribute("tweets", null);
 			req.setAttribute("user", null);
@@ -85,12 +62,25 @@ public class NewTweetController extends HttpServlet {
 		long userID = Long.parseLong(req.getParameter("userID"));
 		log.warning("AJAX data: " + tweet + " " + userID);
 		
+		//Fetch User Info
+		Query userQuery = new Query("User").setFilter(FilterOperator.EQUAL.of("fb_id", Objects.toString(userID)));
+		Entity user = ds.prepare(userQuery).asSingleEntity();
+		
 		// Create new Tweet entity
 		Entity newTweet = new Entity("Tweet");
 		newTweet.setProperty("message", tweet);
 		newTweet.setProperty("view_counter", 0);
 		newTweet.setProperty("user_id", userID);
-
+		
+		if(user != null) {
+			newTweet.setProperty("posted_by", user.getProperty("name"));
+		} else {
+			newTweet.setProperty("posted_by", "Unknown user");
+		}
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		newTweet.setProperty("created_at", dateFormat.format(new Date()));
+		
 		// Save to DB
 		ds.put(newTweet);
 		
@@ -98,6 +88,13 @@ public class NewTweetController extends HttpServlet {
 		long newTweetId = newTweet.getKey().getId();
 		newTweet.setProperty("tweet_id", newTweetId);
 		ds.put(newTweet);
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		String redirectUrl = "/tweet?id=" + newTweetId;
 		resp.setContentType("application/json");

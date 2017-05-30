@@ -18,10 +18,9 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 @SuppressWarnings("serial")
 public class TopTweetsController extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		
 		DatastoreService ds =  DatastoreServiceFactory.getDatastoreService();
 		Query queryAllTweets = new Query("Tweet").addSort("view_counter", SortDirection.DESCENDING);
-		List<Entity> tweets = ds.prepare(queryAllTweets).asList(FetchOptions.Builder.withLimit(10));
+		List<Entity> tweets = ds.prepare(queryAllTweets).asList(FetchOptions.Builder.withLimit(30));
 		
 		for(Entity tweet : tweets) {
 			System.out.print(tweet.getProperty("message"));

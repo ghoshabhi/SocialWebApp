@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>New Tweet</title>
+	<title>Tweet Permalink</title>
 	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 	<script src="https://use.fontawesome.com/c3761a5d7c.js"></script>
@@ -29,30 +29,9 @@
 			margin: 5px;
 		}
 	</style>
+	<script type="text/javascript" src="js/init.js"></script>
 </head>
 <body>
-	<!-- Init FB JS SDK -->
-	<script>
-	  window.fbAsyncInit = function() {
-	    FB.init({
-	      appId      : '1828138897506637',
-	      cookie     : true,
-	      xfbml      : true,
-	      version    : 'v2.8'
-	    });
-	    FB.AppEvents.logPageView();   
-	  };
-	
-	  (function(d, s, id){
-	     var js, fjs = d.getElementsByTagName(s)[0];
-	     if (d.getElementById(id)) {return;}
-	     js = d.createElement(s); js.id = id;
-	     js.src = "//connect.facebook.net/en_US/sdk.js";
-	     fjs.parentNode.insertBefore(js, fjs);
-	   }(document, 'script', 'facebook-jssdk'));
-	</script>
-	<!-- Init end -->
-	
 	<jsp:include page="partials/header.jsp"></jsp:include>
 	
 	<div class="container">
@@ -94,7 +73,10 @@
 	<script
 	  src="https://code.jquery.com/jquery-3.2.1.min.js"
 	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-	  crossorigin="anonymous"></script>
+	  crossorigin="anonymous">
+	</script>
+	<script src="js/fb_auth.js"></script>
+	<script src="js/fb_login.js"></script> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 	<!-- Dependencies End -->
